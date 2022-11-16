@@ -1,0 +1,297 @@
+//Importing package folder Name(Vehicle_and_Travel_Details)
+package Vehicle_and_Travel_Details;
+
+import Driver_Registration.Driver_Reg;
+import java.sql.*;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.Date;
+
+public class Vehicle_Travel_Details{
+	
+	//Declaring Variables
+	JFrame vtd;
+	JLabel limage,lVehicle_num,lVehicle_alpha,lDate,lOrigin,lDestination,lblank;
+	JTextField tfdigits,tfOrigin,tfDestination,tfButton,tfdate;
+	JComboBox <String> Vehicle_type, Vehicle_num,Vehicle_alpha,Vehicle_cat;
+	JRadioButton yes,no;
+	JButton next,reset;
+	JPanel panel1;
+	
+	//Creating a Constructor
+	public Vehicle_Travel_Details(){
+		
+		vtd=new JFrame();
+		vtd.setTitle("Vehicle Travel Details");
+		vtd.setSize(500,700);
+		vtd.setDefaultCloseOperation(vtd.EXIT_ON_CLOSE);
+		
+		//Calling Methods
+		createpanel();
+		Component();
+		Date();
+		addComponent();
+		vtd.add(panel1);
+		vtd.setVisible(true);	
+	}
+	public void createpanel(){
+	
+		//Creating a JPanel
+		panel1=new JPanel();
+		panel1.setBackground(new Color (122,128,144));
+		panel1.setLayout(new GridLayout(16,1,10,10));
+	}
+	
+	public void Component(){
+		
+		/*Creating an istance of ImageIcon
+		Inside parameter, pass the path of the icon
+		getImage() method is returning one image*/
+		Image icon=new ImageIcon(getClass().getResource("/Image/icon.png")).getImage().getScaledInstance(31,31,Image.SCALE_SMOOTH);
+		limage=new JLabel();
+		limage.setIcon(new ImageIcon(icon));
+		limage.setHorizontalAlignment(JLabel.CENTER);
+			
+		//Creating insatnce of Jlabel class
+		lVehicle_num =new JLabel("Vehicle Number");
+		lVehicle_alpha=new JLabel("Vehicle Alphabet");
+		lDate=new JLabel("Date of Journey");
+		lOrigin=new JLabel("Origin");
+		lDestination=new JLabel("Destination");
+		lblank=new JLabel("Are you returning the same day?");
+		
+		//Creating an instance of JTextField
+		
+		tfdate=new JTextField(10);
+		tfButton=new JTextField("Are you returning the same day",10);
+		
+		tfdigits=new JTextField("Last 4 digits of your vehicle number",10);
+		
+		////Adding FocusListener to JTextfield(tfdigits)
+		tfdigits.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tfdigits.getText().equals("Last 4 digits of your vehicle number")){
+					tfdigits.setText("");
+				}
+				else{
+					tfdigits.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfdigits.getText().equals("")){
+					tfdigits.setText("Last 4 digits of your vehicle number");
+				}
+			}
+		});
+		//Adding KeyListener to JTextfield(tfdigits) which accept only digits
+		tfdigits.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e){
+				char c=e.getKeyChar();
+				if(!(Character.isDigit(c))){
+					e.consume();
+				}
+				//This Limits the input to 4 digit
+				if(tfdigits.getText().length()>=4){
+					e.consume();
+				}
+			}				
+		});
+		
+		tfOrigin=new JTextField("Origin",10);
+		////Adding FocusListener to JTextfield(tfOrigin)
+		tfOrigin.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tfOrigin.getText().equals("Origin")){
+					tfOrigin.setText("");
+				}
+				else{
+					tfOrigin.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfOrigin.getText().equals("")){
+					tfOrigin.setText("Origin");
+				}
+			}
+		});
+		//Adding KeyListener to JTextfield(tfOrigin) which accept only Letters(Alphabets)
+		tfOrigin.addKeyListener(new KeyAdapter(){
+				public void keyTyped(KeyEvent e){
+					char c=e.getKeyChar();
+					if(!(Character.isLetter(c))){
+						e.consume();
+					}
+				}
+		});
+		
+		tfDestination=new JTextField("Destination",10);
+		////Adding FocusListener to JTextfield(tfDestination)
+		tfDestination.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+			if(tfDestination.getText().equals("Destination")){
+				tfDestination.setText("");
+			}
+			else{
+				tfDestination.selectAll();
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfDestination.getText().equals("")){
+					tfDestination.setText("Destination");
+				}
+			}
+		});
+		//Event Handling which accept only Characters in the JTextField
+		tfDestination.addKeyListener(new KeyAdapter(){
+				public void keyTyped(KeyEvent e){
+					char c=e.getKeyChar();
+					if(!(Character.isLetter(c))){
+						e.consume();
+					}
+				}
+		});
+		
+		//Creating an instanc of JComboBox
+		String type[]={"VehicleType","BP","BT","BG"};
+		Vehicle_type=new JComboBox<String>(type);
+		String num[]={"VehicleNumber","1","2","3","4","5"};
+		Vehicle_num=new JComboBox<String>(num);
+		String alpha[]={"VehicleAlphabet","A","B","C","D","E","F"};
+		Vehicle_alpha=new JComboBox<String>(alpha);
+		String cat[]={"VehicleCategory","Light","Heavy","Medium","Taxi","Two Wheeler","Bus"};
+		Vehicle_cat=new JComboBox<String>(cat);
+		
+		//Creating an instance of JRadioButton
+		yes=new JRadioButton("Yes");
+		no=new JRadioButton("No");
+		ButtonGroup group=new ButtonGroup();
+		group.add(yes);
+		group.add(no);
+		
+		//Creatiing an instance of JButton;
+		next=new JButton("Next");
+		//Adding ActionListener to the next JButton
+		next.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				try{//Setting condition  
+						//User cannot visit next page if the mentioned fields are not entered
+
+					if(Vehicle_type.getSelectedIndex()<1||Vehicle_num.getSelectedIndex()<1||Vehicle_alpha.getSelectedIndex()<1||Vehicle_cat.getSelectedIndex()<1||tfdigits.getText().equals("Last 4 digits of your vehicle number")){
+					JOptionPane.showMessageDialog(null,"Enter all the Data");
+					}
+					else if(tfdigits.getText().length()<4){
+						JOptionPane.showMessageDialog(null,"Enter 4 digits of your Vehicle Number");
+					}
+					else{
+						//If the mentioned fields are entered
+						//Calling a method called connection()
+						connection();
+						Driver_Reg d=new Driver_Reg();//This will make user to go to Driver_Reg page
+						vtd.dispose();//Dispose after entering all the data
+					}
+				}
+				catch(Exception e){
+						System.out.println(e.getMessage());
+					}
+				}
+		});
+		
+		reset=new JButton("Reset");
+		//Event Handling reset button 
+		reset.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				//Will reset all the fields 
+				Vehicle_type.setSelectedIndex(0);
+				Vehicle_num.setSelectedIndex(0);
+				Vehicle_alpha.setSelectedIndex(0);
+				Vehicle_cat.setSelectedIndex(0);
+				tfdigits.setText("Last 4 digits of your vehicle number");
+				tfOrigin.setText("Origin");
+				tfDestination.setText("Destination");
+			}
+		});
+	}
+	//This method will get the date in dd/mm/yyyy format
+	public String Date(){
+		Date dt=new Date();
+		GregorianCalendar gCal=new GregorianCalendar();
+		gCal.setTime(dt);
+		String date=gCal.get(Calendar.DATE)+"/"+(gCal.get(Calendar.MONTH)+1)+"/"+gCal.get(Calendar.YEAR);
+		return date;
+	}
+	
+	public void addComponent(){
+		/*Adding AWT components to the GridLayout*/
+		panel1.add(limage);
+		panel1.add(lVehicle_num);
+	
+		panel1.add(Vehicle_type);
+		panel1.add(Vehicle_num);
+		panel1.add(Vehicle_alpha);
+		
+		panel1.add(tfdigits);
+		panel1.add(Vehicle_cat);
+		panel1.add(lDate);
+		panel1.add(tfdate);
+		tfdate.setText(Date());
+		
+		panel1.add(tfOrigin);
+		panel1.add(tfDestination);
+		panel1.add(lblank);
+		panel1.add(yes);
+		panel1.add(no);
+		
+		panel1.add(next);
+		panel1.add(reset);
+	}
+	
+	public void connection(){
+		Connection con=null;
+		PreparedStatement ps;
+		Statement stmt;
+		ResultSet rs;
+        try{
+            //For MySQL DB Connectivity
+            con=DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "");
+			System.out.println("\nConnected to Vehicle_Travel_Details Database!");
+			
+        }
+        catch(Exception e){
+            System.out.println("Error in Connection. Check your database connectivity.");
+        }
+	
+		// Getting data from user
+		String s=Vehicle_type.getSelectedItem().toString();
+		String Vehiclenum=Vehicle_num.getSelectedItem().toString();
+		String alpha=Vehicle_alpha.getSelectedItem().toString();
+		String cat=Vehicle_cat.getSelectedItem().toString();
+		 
+		//Getting text from user
+		String Vnum=tfdigits.getText();
+		String O=tfOrigin.getText();
+		String des=tfDestination.getText();
+	
+		try{
+			stmt=con.createStatement();//creating SQL statement
+			//Inserting values into a sql table named cpms
+			String query="INSERT INTO cpms(VehicleType,VehicleNumber,VehicleAlphabet,VehicleDigit,VehicleCategory,Origin,Destination) VALUES('"+s+"','"+Vehiclenum+"','"+alpha+"','"+Vnum+"','"+cat+"','"+O+"','"+des+"')"; 
+			if(stmt.executeUpdate(query)>=1){
+				System.out.println("Inserted Successfully!");
+				stmt.close();//Closing statement
+				con.close();//Closing connection
+			}else
+				System.out.println("Failed to insert the Data!");
+        }
+        catch(Exception e){
+            System.out.println("Insert-Statement cannot be executed2"+e);
+        }
+	}
+}
+

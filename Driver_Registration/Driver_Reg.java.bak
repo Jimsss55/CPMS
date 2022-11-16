@@ -1,0 +1,309 @@
+package Driver_Registration;
+
+import Passenger_Registration.Passenger_Reg;
+
+import java.sql.*;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class Driver_Reg {
+	//Declaring Variables
+	JFrame d;
+	JLabel limage,jlicense_num,jcid,jname,jgender,jmobilenum;
+	JTextField tflisc_num,tfcid,tfname,tfmobilenum,tfpurpose;
+	JComboBox <String> license_num,gender;
+	JButton next,reset;
+	JPanel panel;
+
+	//Creating a Constructor
+	public Driver_Reg(){
+		d=new JFrame();
+		d.setTitle("Driver Registration Details");
+		d.setSize(500,550);
+		d.setDefaultCloseOperation(d.EXIT_ON_CLOSE);
+		
+		//Calling a methods
+		createpanel();
+		addComponent();
+		d.add(panel);
+		d.setVisible(true);	
+	}
+	
+	public void createpanel(){
+		panel=new JPanel();
+		panel.setBackground(new Color(127,255,0));
+		panel.setLayout(new GridLayout(16,1,10,10));
+		
+		/*Creating an istance of ImageIcon
+		Inside parameter, pass the path of the icon
+		getImage() method is returning one image*/
+		Image icon2=new ImageIcon(getClass().getResource("/Image/icon2.jpg")).getImage().getScaledInstance(55,55,Image.SCALE_SMOOTH);
+		limage=new JLabel();
+		limage.setIcon(new ImageIcon(icon2));
+		limage.setHorizontalAlignment(JLabel.CENTER);
+		
+		//Creating an instance of JLabel class
+		jlicense_num=new JLabel("License Number");
+		jcid=new JLabel("CID number");
+		jname=new JLabel("Full name");
+		jgender=new JLabel("Gender");
+		jmobilenum=new JLabel("Mobile Number");
+		
+		//Creating an insatnce of JTextField class
+		tflisc_num=new JTextField("Last 4/5 digits of your license number",10);
+		////Adding FocusListener to JTextfield(tflisc_num)
+		tflisc_num.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tflisc_num.getText().equals("Last 4/5 digits of your license number")){
+					tflisc_num.setText("");
+				}
+				else{
+					tflisc_num.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tflisc_num.getText().equals("")){
+					tflisc_num.setText("Last 4/5 digits of your license number");
+				}
+			}
+		});
+		
+		//Adding KeyListener to JTextfield(tflisc_num) which accept only digits
+		tflisc_num.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e){
+				char c=e.getKeyChar();
+				if(!(Character.isDigit(c))){
+						e.consume();
+				}
+				//This Limits the input to 5 digits
+				if(tflisc_num.getText().length()>=5){
+					e.consume();
+				}
+			}
+		});
+		
+		tfcid=new JTextField("Enter your CID Nmber",10);
+		////Adding FocusListener to JTextfield(tfcid)
+		tfcid.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tfcid.getText().equals("Enter your CID Nmber")){
+					tfcid.setText("");
+				}
+				else{
+					tfcid.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfcid.getText().equals("")){
+					tfcid.setText("Enter your CID Nmber");
+				}
+			}
+		});
+		//Adding KeyListener to JTextfield(tfcid) which accept only digits
+		tfcid.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e){
+				char c=e.getKeyChar();
+				if(!(Character.isDigit(c))){
+					e.consume();
+				}
+				//This Limits the input to 11 digit
+				if(tfcid.getText().length()>=11){
+					e.consume();
+				}
+			}
+		});
+		
+		tfname=new JTextField("Enter your name",10);
+		////Adding FocusListener to JTextfield(tfname)
+		tfname.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tfname.getText().equals("Enter your name")){
+					tfname.setText("");
+				}
+				else{
+					tfname.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfname.getText().equals("")){
+					tfname.setText("Enter your name");
+				}
+			}
+		});
+		
+		tfmobilenum=new JTextField("Enter your Mobile number",10);
+		////Adding FocusListener to JTextfield(tfmobilenum)
+		tfmobilenum.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tfmobilenum.getText().equals("Enter your Mobile number")){
+					tfmobilenum.setText("");
+				}
+				else{
+					tfmobilenum.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfmobilenum.getText().equals("")){
+					tfmobilenum.setText("Enter your Mobile number");
+				}
+			}
+		});
+			//Adding KeyListener to JTextfield(tfmobilenum) which accept only digits
+		tfmobilenum.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e){
+				char c=e.getKeyChar();
+				if(!(Character.isDigit(c))){
+					e.consume();
+				}
+				//This Limits the input to 8 digit
+				if(tfmobilenum.getText().length()>=8){
+					e.consume();
+				}
+			}
+		});
+		
+		tfpurpose=new JTextField("Purpose of Visit",10);
+		////Adding FocusListener to JTextfield(tfpurpose)
+		tfpurpose.addFocusListener(new FocusAdapter(){
+			//Invoked when a component gains the keyboard focus
+			public void focusGained(FocusEvent e){
+				if(tfpurpose.getText().equals("Purpose of Visit")){
+					tfpurpose.setText("");
+				}
+				else{
+					tfpurpose.selectAll();
+				}
+			}
+			//Invoked when a component loses the keyboard focus
+			public void focusLost(FocusEvent e){
+				if(tfpurpose.getText().equals("")){
+					tfpurpose.setText("Purpose of Visit");
+				}
+			}
+		});
+		
+		//Creating an instance of JComboBox class
+		String num[]={"LicenseNumber","P","G","S","M","T","PD"};
+		license_num=new JComboBox<String>(num);
+		String g[]={"Gender","Male","Female"};
+		gender =new JComboBox <String>(g);
+		
+		//Creating an instance of JButton
+		next=new JButton("Next");
+		//Adding ActionListener to the next JButton
+		next.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae){
+				try{//Setting condition  
+						//User cannot visit next page if the mentioned fields are not entered
+					if(license_num.getSelectedIndex()<0||gender.getSelectedIndex()<0||tflisc_num.getText().equals("Last 4/5 digits of your license number")||tfcid.getText().equals("Enter your CID Nmber")||tfname.getText().equals("Enter your name")||tfmobilenum.getText().equals("Enter your Mobile number")||tfpurpose.getText().equals("Purpose of Visit")){
+						JOptionPane.showMessageDialog(null,"Enter all the Fields!!!");
+					}
+					//Show Error if the field is less than the reqired digits
+					else if(tflisc_num.getText().length()<4){
+						JOptionPane.showMessageDialog(null,"Last 4/5 digits of your license number");
+					}
+					else if(tfcid.getText().length()<11){
+						JOptionPane.showMessageDialog(null,"Enter Your 11 digit CID number");
+					}
+					else if(tfmobilenum.getText().length()<8){
+						JOptionPane.showMessageDialog(null,"Enter your 8 digit mobile number");
+					}
+					else{
+						//If the mentioned fields are entered
+						connection();//Calling a method called connection()
+						Passenger_Reg rd=new Passenger_Reg();//This will make user to go to Passenger_Reg page
+						d.dispose();//Dispose after entering all the data
+					}
+				}
+				catch(Exception e){
+					System.out.println(e.getMessage());
+				}
+			}
+		});	
+		reset=new JButton("Reset");
+		//Event Handling reset JButton 
+		reset.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				//Will reset all the fields 
+				license_num.setSelectedIndex(0);
+				gender.setSelectedIndex(0);
+				tflisc_num.setText("Last 4/5 digits of your license number");
+				tfcid.setText("Enter your CID Nmber");
+				tfname.setText("Enter your name");
+				tfmobilenum.setText("Enter your Mobile number");
+				tfpurpose.setText("Purpose of Visit");
+			}
+		});		
+	}
+	public void addComponent(){
+		/*Adding AWT components to the GridLayout*/
+		panel.add(limage);
+		panel.add(jlicense_num);
+		panel.add(license_num);
+		panel.add(tflisc_num);
+		panel.add(tfcid);
+		panel.add(tfname);
+		panel.add(jgender);
+		panel.add(gender);
+		panel.add(jmobilenum);
+		panel.add(tfmobilenum);
+		panel.add(tfpurpose);
+		panel.add(reset);
+		panel.add(next);
+		d.add(panel);
+	}
+	public void connection(){
+		Connection con=null;
+		PreparedStatement ps;
+		Statement stmt;
+		ResultSet rs;
+        try{
+            //For MySQL DB Connectivity
+            con=DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "");
+			System.out.println("\nConnected to Driver_Reg Database!");
+        }
+        catch(Exception e){
+            System.out.println("Error in Connection. Check your database connectivity.");
+        }
+	
+		// Getting data from user
+		String lnum=license_num.getSelectedItem().toString();
+		String g=gender.getSelectedItem().toString();
+		 
+		//Displaying JTextField
+		String tlic=tflisc_num.getText();
+		String cid=tfcid.getText();
+		String name=tfname.getText();
+		String mob=tfmobilenum.getText();
+		String p=tfpurpose.getText();
+		
+		try{
+			stmt=con.createStatement();//creating SQL statement
+			//Inserting values into a sql table named driverdetails
+			String query="INSERT INTO driverdetails(LicenseAlphabet,LicenseNumber,CID,Name,Gender,MobileNumber,Purpose) VALUES('"+lnum+"','"+tlic+"','"+cid+"','"+name+"','"+g+"','"+mob+"','"+p+"')"; 
+
+			if(stmt.executeUpdate(query)>=1){
+				System.out.println("Inserted Successfully!");
+			}else
+				System.out.println("Failed to insert the Data!");
+				stmt.close();//Closing statement
+				con.close();//closing connection
+        }
+        catch(Exception e){
+            System.out.println("Insert-Statement cannot be executed2"+e);
+        }
+	}
+}
+		
+		
+		
+		
